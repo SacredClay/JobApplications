@@ -8,5 +8,4 @@ Functions include:
 
 Goals/Bonus:
 - Being able to take a web link and convert it into a job application
-
-~~- Make it so the save method automatically updates the modified date instead of manually doing it for every update.~~ Done!
+- ~~Make it so the save method automatically updates the modified date instead of manually doing it for every update.~~ Done!
