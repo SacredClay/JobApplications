@@ -29,7 +29,7 @@ public class JobsController
         return new ResponseEntity<>(createdJob, HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("delete/{jobId}")
+    @DeleteMapping("{jobId}/delete")
     public ResponseEntity<Job> deleteJobApplication(@PathVariable("jobId") String jobId)
     {
         Job deletedJob = jobsService.deleteJobApplication(jobId);
@@ -53,5 +53,18 @@ public class JobsController
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PutMapping("/{jobId}/Status")
+    public ResponseEntity<Job> updateApplicationStatus(@PathVariable String jobId, @RequestParam() ApplicationStatus status)
+    {
+        Job updatedJob = jobsService.updateApplicationStatus(jobId, status);
+
+        if (updatedJob == null)
+        {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(updatedJob, HttpStatus.OK);
     }
 }
