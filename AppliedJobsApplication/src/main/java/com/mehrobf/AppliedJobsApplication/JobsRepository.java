@@ -24,6 +24,7 @@ public class JobsRepository
 
     public Job updateJob(Job job)
     {
+        job.setModifiedDate(CurrentDate.getCurrentDate());
         return mongoTemplate.save(job);
     }
 
