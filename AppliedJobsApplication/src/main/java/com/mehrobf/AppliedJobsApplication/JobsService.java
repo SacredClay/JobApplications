@@ -8,28 +8,29 @@ import java.util.List;
 @Service
 public class JobsService
 {
+
     @Autowired
     private JobsRepository jobsRepository;
 
     public List<Job> getAppliedJobs()
     {
-        return jobsRepository.findAll();
+        return jobsRepository.getAllJobs();
     }
 
     public Job createJobApplication(JobRequest newJobRequest)
     {
         Job newjob = new Job(newJobRequest);
-        return jobsRepository.save(newjob);
+        return jobsRepository.createJob(newjob);
     }
 
     public Job deleteJobApplication(String jobId)
     {
-        return jobsRepository.deleteById(jobId);
+        return jobsRepository.deleteJobById(jobId);
     }
 
     public Job getApplicationById(String jobId)
     {
-        return jobsRepository.findById(jobId);
+        return jobsRepository.findJobById(jobId);
     }
 
     public Job updateApplicationStatus(String jobId, ApplicationStatus status)
@@ -43,9 +44,7 @@ public class JobsService
 
         job.setApplicationStatus(status);
 
-        job.setModifiedDate(CurrentDate.getCurrentDate());
-
-        return jobsRepository.save(job);
+        return jobsRepository.updateJob(job);
     }
 
 }

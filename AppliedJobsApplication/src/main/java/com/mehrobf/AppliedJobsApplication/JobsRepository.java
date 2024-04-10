@@ -1,13 +1,52 @@
 package com.mehrobf.AppliedJobsApplication;
 
-import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface JobsRepository extends MongoRepository<Job, ObjectId>
-{
-    public Job deleteById(String id);
+import java.util.List;
 
-    public Job findById(String id);
+@Repository
+public class JobsRepository
+{
+    private final MongoTemplate mongoTemplate;
+
+    @Autowired
+    public JobsRepository(MongoTemplate mongoTemplate)
+    {
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    public Job createJob(Job job)
+    {
+        return mongoTemplate.save(job);
+    }
+
+    public Job updateJob(Job job)
+    {
+        job.setModifiedDate(CurrentDate.getCurrentDate());
+        return mongoTemplate.save(job);
+    }
+
+    public List<Job> getAllJobs()
+    {
+        return mongoTemplate.findAll(Job.class);
+    }
+
+    public Job deleteJobById(String jobId)
+    {
+        Job deletedJob = findJobById(jobId);
+        if (deletedJob != null)
+        {
+            mongoTemplate.remove(deletedJob);
+        }
+        return deletedJob;
+    }
+
+    public Job findJobById(String jobId)
+    {
+        Job job = mongoTemplate.findById(jobId, Job.class);
+        return job;
+    }
+
 }
