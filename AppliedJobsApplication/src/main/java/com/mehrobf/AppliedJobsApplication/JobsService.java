@@ -43,6 +43,8 @@ public class JobsService
 
         job.setApplicationStatus(status);
 
+        job.setModifiedDate(CurrentDate.getCurrentDate());
+
         return jobsRepository.save(job);
     }
 

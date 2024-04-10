@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 @Document(collection = "job_applications")
@@ -35,6 +34,8 @@ public class Job
 
     private Date applicationDate;
 
+    private Date modifiedDate;
+
     private ApplicationStatus applicationStatus;
 
     private JobBoard jobBoard;
@@ -49,14 +50,13 @@ public class Job
         this.webLink = jobRequest.getWebLink();
         this.customResume = jobRequest.isCustomResume();
 
-        LocalDate currentDate = LocalDate.now();
         if (jobRequest.getApplicationDate() != null)
         {
             this.applicationDate = jobRequest.getApplicationDate();
         }
         else
         {
-            this.applicationDate = java.sql.Date.valueOf(currentDate);
+            this.applicationDate = CurrentDate.getCurrentDate();
         }
         this.applicationStatus = ApplicationStatus.APPLIED;
         this.jobBoard = jobRequest.getJobBoard();
