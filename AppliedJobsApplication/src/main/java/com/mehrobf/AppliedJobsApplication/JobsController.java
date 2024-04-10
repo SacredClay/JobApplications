@@ -36,7 +36,7 @@ public class JobsController
 
         if (deletedJob == null)
         {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(deletedJob, HttpStatus.NO_CONTENT);
@@ -49,20 +49,21 @@ public class JobsController
 
         if (result == null)
         {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PutMapping("/{jobId}/Status")
-    public ResponseEntity<Job> updateApplicationStatus(@PathVariable String jobId, @RequestParam() ApplicationStatus status)
+    @PutMapping("/{jobId}/status")
+    public ResponseEntity<Job> updateApplicationStatus(@PathVariable String jobId,
+                                                       @RequestParam() ApplicationStatus status)
     {
         Job updatedJob = jobsService.updateApplicationStatus(jobId, status);
 
         if (updatedJob == null)
         {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(updatedJob, HttpStatus.OK);
