@@ -32,4 +32,18 @@ public class JobsService
         return jobsRepository.findById(jobId);
     }
 
+    public Job updateApplicationStatus(String jobId, ApplicationStatus status)
+    {
+        Job job = getApplicationById(jobId);
+
+        if (job == null)
+        {
+            return null;
+        }
+
+        job.setApplicationStatus(status);
+
+        return jobsRepository.save(job);
+    }
+
 }
