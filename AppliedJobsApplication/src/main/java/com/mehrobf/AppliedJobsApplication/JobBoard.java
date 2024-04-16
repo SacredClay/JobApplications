@@ -1,5 +1,6 @@
 package com.mehrobf.AppliedJobsApplication;
 
+//This is where the job was found.
 public enum JobBoard
 {
     LinkedIn,
@@ -9,6 +10,8 @@ public enum JobBoard
     RemoteCo,
 
     Monster,
+
+    Company,
 
     Person,
 
