@@ -47,4 +47,9 @@ public class JobsService
         return jobsRepository.updateJob(job);
     }
 
+    public List<Job> searchJobApplications(ApplicationSearchDto applicationSearchDto)
+    {
+        return jobsRepository.searchJobApplications(applicationSearchDto);
+    }
+
 }
