@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -72,27 +72,9 @@ public class JobsController
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Job>> searchJobApplications(@RequestParam(required = false) String title,
-                                                           @RequestParam(required = false) String company,
-                                                           @RequestParam(required = false) Float startingPay,
-                                                           @RequestParam(required = false) Float endingPay,
-                                                           @RequestParam(required = false) Boolean remote,
-                                                           @RequestParam(required = false) Date startDate,
-                                                           @RequestParam(required = false) Date endDate,
-                                                           @RequestParam(required = false) ApplicationStatus applicationStatus,
-                                                           @RequestParam(required = false) JobBoard jobBoard)
+    public ResponseEntity<List<Job>> searchJobApplications(@RequestParam(required = false) Map<String,String> params) throws ParseException
     {
-        ApplicationSearchDto applicationSearchDto = new ApplicationSearchDto(title,
-                                                                            company,
-                                                                            startingPay,
-                                                                            endingPay,
-                                                                            remote,
-                                                                            startDate,
-                                                                            endDate,
-                                                                            applicationStatus,
-                                                                            jobBoard);
-
-        List<Job> foundJobs = jobsService.searchJobApplications(applicationSearchDto);
+        List<Job> foundJobs = jobsService.searchJobApplications(params);
 
         if (foundJobs.isEmpty())
         {

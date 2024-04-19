@@ -6,7 +6,12 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class JobsRepository
@@ -51,54 +56,46 @@ public class JobsRepository
         return job;
     }
 
-    public List<Job> searchJobApplications(ApplicationSearchDto applicationSearchDto)
+    public List<Job> searchJobApplications(Map<String, String> params) throws ParseException
     {
         Query query = new Query();
-        if (applicationSearchDto.getTitle() != null)
+        for (Map.Entry<String, String> entry : params.entrySet())
         {
-            query.addCriteria(Criteria.where("Title").is(applicationSearchDto.getTitle()));
+            query.addCriteria(createCriteria(entry.getKey(), entry.getValue()));
         }
-
-        if (applicationSearchDto.getCompany() != null)
-        {
-            query.addCriteria(Criteria.where("Company").is(applicationSearchDto.getCompany()));
-        }
-
-        if (applicationSearchDto.getStartingPay() != null)
-        {
-            query.addCriteria(Criteria.where("pay").gte(applicationSearchDto.getStartingPay()));
-        }
-
-        if (applicationSearchDto.getEndingPay() != null)
-        {
-            query.addCriteria(Criteria.where("pay").lte(applicationSearchDto.getEndingPay()));
-        }
-
-        if (applicationSearchDto.getRemote() != null)
-        {
-            query.addCriteria(Criteria.where("remote").is(applicationSearchDto.getRemote()));
-        }
-
-        if (applicationSearchDto.getStartDate() != null)
-        {
-            query.addCriteria(Criteria.where("applicationDate").gte(applicationSearchDto.getStartDate()));
-        }
-
-        if (applicationSearchDto.getEndDate() != null)
-        {
-            query.addCriteria(Criteria.where("applicationDate").lte(applicationSearchDto.getEndDate()));
-        }
-
-        if (applicationSearchDto.getApplicationStatus() != null)
-        {
-            query.addCriteria(Criteria.where("applicationStatus").is(applicationSearchDto.getApplicationStatus()));
-        }
-
-        if (applicationSearchDto.getJobBoard() != null)
-        {
-            query.addCriteria(Criteria.where("jobBoard").is(applicationSearchDto.getJobBoard()));
-        }
-
         return mongoTemplate.find(query, Job.class);
+    }
+
+    private Criteria createCriteria(String fieldName, String value) throws ParseException
+    {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        try {
+            // Parse input string into LocalDate using defined format
+            LocalDate date = LocalDate.parse(value, formatter);
+            return Criteria.where("appliedDate").is(date);
+        } catch (DateTimeParseException e)
+        {}
+
+        try {
+            if (value.equals("true") || value.equals("false"))
+            {
+                return Criteria.where(fieldName).is(Boolean.parseBoolean(value));
+            }
+        } catch (Exception e)
+        {}
+
+        try {
+            if (fieldName.equals("startingPay"))
+            {
+                return Criteria.where("pay").gte(Float.parseFloat(value));
+            }
+            if (fieldName.equals("endingPay"))
+            {
+                return Criteria.where("pay").lte(Float.parseFloat(value));
+            }
+        } catch (Exception e)
+        {}
+
+        return Criteria.where(fieldName).is(value);
     }
 }

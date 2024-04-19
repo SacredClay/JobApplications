@@ -3,7 +3,9 @@ package com.mehrobf.AppliedJobsApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class JobsService
@@ -47,9 +49,9 @@ public class JobsService
         return jobsRepository.updateJob(job);
     }
 
-    public List<Job> searchJobApplications(ApplicationSearchDto applicationSearchDto)
+    public List<Job> searchJobApplications(Map<String,String> params) throws ParseException
     {
-        return jobsRepository.searchJobApplications(applicationSearchDto);
+        return jobsRepository.searchJobApplications(params);
     }
 
 }
