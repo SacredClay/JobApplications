@@ -11,3 +11,4 @@ Goals/Bonus:
 - ~~Make it so the save method automatically updates the modified date instead of manually doing it for every update.~~ Done!
 - Automatically change application status to ghosted after no response from application date
 - Make the params enums?
+- If there is already a job application to a company applied in the past, return it as a message when creating a new job application.
