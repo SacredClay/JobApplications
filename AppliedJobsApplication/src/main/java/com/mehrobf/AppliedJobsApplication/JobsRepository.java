@@ -6,7 +6,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -52,28 +51,27 @@ public class JobsRepository
 
     public Job findJobById(String jobId)
     {
-        Job job = mongoTemplate.findById(jobId, Job.class);
-        return job;
+        return mongoTemplate.findById(jobId, Job.class);
     }
 
-    public List<Job> searchJobApplications(Map<String, String> params) throws ParseException
+    public List<Job> searchJobApplications(Map<String, String> params)
     {
         Query query = new Query();
         for (Map.Entry<String, String> entry : params.entrySet())
         {
-            query.addCriteria(createCriteria(entry.getKey(), entry.getValue()));
+            query.addCriteria(createCriteriaParser(entry.getKey(), entry.getValue()));
         }
         return mongoTemplate.find(query, Job.class);
     }
 
-    private Criteria createCriteria(String fieldName, String value) throws ParseException
+    private Criteria createCriteriaParser(String fieldName, String value)
     {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try {
             // Parse input string into LocalDate using defined format
             LocalDate date = LocalDate.parse(value, formatter);
             return Criteria.where("appliedDate").is(date);
-        } catch (DateTimeParseException e)
+        } catch (DateTimeParseException ignored)
         {}
 
         try {
@@ -81,7 +79,7 @@ public class JobsRepository
             {
                 return Criteria.where(fieldName).is(Boolean.parseBoolean(value));
             }
-        } catch (Exception e)
+        } catch (Exception ignored)
         {}
 
         try {
@@ -93,7 +91,7 @@ public class JobsRepository
             {
                 return Criteria.where("pay").lte(Float.parseFloat(value));
             }
-        } catch (Exception e)
+        } catch (Exception ignored)
         {}
 
         return Criteria.where(fieldName).is(value);
