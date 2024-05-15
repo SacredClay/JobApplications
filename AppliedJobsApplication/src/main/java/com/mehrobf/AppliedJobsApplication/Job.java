@@ -61,4 +61,26 @@ public class Job
         this.applicationStatus = ApplicationStatus.APPLIED;
         this.jobBoard = jobRequest.getJobBoard();
     }
+
+    public static JobDTO toDTO(Job job)
+    {
+        if (job == null)
+        {
+            return null;
+        }
+
+        JobDTO jobDTO = new JobDTO();
+
+        jobDTO.setWebLink(job.getWebLink());
+        jobDTO.setTitle(job.getTitle());
+        jobDTO.setCompany(job.getCompany());
+        jobDTO.setPay(job.getPay());
+        jobDTO.setRemote(job.isRemote());
+        jobDTO.setQualified(job.isQualified());
+        jobDTO.setApplicationStatus(job.getApplicationStatus());
+        jobDTO.setApplicationDate(job.getApplicationDate());
+        jobDTO.setJobBoard(job.getJobBoard());
+
+        return jobDTO;
+    }
 }

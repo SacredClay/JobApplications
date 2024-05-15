@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -25,10 +24,13 @@ public class JobsController
     }
 
     @PostMapping()
-    public ResponseEntity<Job> createJobApplication(@RequestBody JobRequest jobRequest)
+    public ResponseEntity<JobDTO> createJobApplication(@RequestBody JobRequest jobRequest)
     {
         Job createdJob = jobsService.createJobApplication(jobRequest);
-        return new ResponseEntity<>(createdJob, HttpStatus.ACCEPTED);
+
+        JobDTO createdjobDTO = Job.toDTO(createdJob);
+
+        return new ResponseEntity<>(createdjobDTO, HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("{jobId}/delete")
@@ -72,7 +74,7 @@ public class JobsController
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Job>> searchJobApplications(@RequestParam(required = false) Map<String,String> params) throws ParseException
+    public ResponseEntity<List<Job>> searchJobApplications(@RequestParam(required = false) Map<String,String> params)
     {
         List<Job> foundJobs = jobsService.searchJobApplications(params);
 
