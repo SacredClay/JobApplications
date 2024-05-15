@@ -12,3 +12,4 @@ Goals/Bonus:
 - Automatically change application status to ghosted after no response from application date
 - Make the params enums?
 - If there is already a job application to a company applied in the past, return it as a message when creating a new job application.
+- Allow a webaddress to be blank if it's a job posting site like LinkedIn/Monster.
