@@ -11,6 +11,8 @@ public enum JobBoard
 
     Monster,
 
+    ZipRecruiter,
+
     Company,
 
     Person,
