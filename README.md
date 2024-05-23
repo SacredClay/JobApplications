@@ -13,3 +13,4 @@ Goals/Bonus:
 - Make the params enums?
 - If there is already a job application to a company applied in the past, return it as a message when creating a new job application.
 - Allow a webaddress to be blank if it's a job posting site like LinkedIn/Monster.
+- Allow Pay to be hourly and automatically converted to salary. Ie: entering in 15 for 15/hr or 60k for 60,000.
