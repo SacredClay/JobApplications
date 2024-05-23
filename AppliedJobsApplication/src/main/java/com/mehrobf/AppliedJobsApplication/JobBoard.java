@@ -13,6 +13,8 @@ public enum JobBoard
 
     ZipRecruiter,
 
+    Jobcase,
+
     Company,
 
     Person,
