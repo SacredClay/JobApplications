@@ -15,6 +15,8 @@ public enum JobBoard
 
     Jobcase,
 
+    Lensa,
+
     Company,
 
     Person,
