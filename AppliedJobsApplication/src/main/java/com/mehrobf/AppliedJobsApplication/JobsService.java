@@ -50,26 +50,20 @@ public class JobsService
         return jobsRepository.updateJob(job);
     }
 
-    public List<Job> searchJobApplications(Map<String,String> params)
+    public List<Job> searchJobApplications(ApplicationSearchDto params)
     {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        if (params.containsKey("startDate") && params.containsKey("endDate"))
+        if (params.getStartDate() != null  && params.getEndDate() != null)
         {
-            LocalDate startDate = LocalDate.parse(params.get("startDate"), formatter);
-            LocalDate endDate = LocalDate.parse(params.get("startDate"), formatter);
-
-            if (startDate.isAfter(endDate))
+            if (params.getStartDate().after(params.getEndDate()))
             {
                 throw new IllegalArgumentException("End date must be after the start date.");
             }
         }
 
-        if (params.containsKey("startingPay") && params.containsKey("endingPay"))
+        if (params.getStartingPay() != null && params.getEndingPay() != null)
         {
-            float startingPay = Float.parseFloat(params.get("startingPay"));
-            float endingPay = Float.parseFloat(params.get("endingPay"));
-
-            if (startingPay > endingPay)
+            if (params.getStartingPay() > params.getEndingPay())
             {
                 throw new IllegalArgumentException("Starting pay must be less than ending pay.");
             }

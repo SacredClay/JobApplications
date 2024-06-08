@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -54,46 +55,70 @@ public class JobsRepository
         return mongoTemplate.findById(jobId, Job.class);
     }
 
-    public List<Job> searchJobApplications(Map<String, String> params)
+    public List<Job> searchJobApplications(ApplicationSearchDto params)
     {
-        Query query = new Query();
-        for (Map.Entry<String, String> entry : params.entrySet())
-        {
-            query.addCriteria(createCriteriaParser(entry.getKey(), entry.getValue()));
-        }
+        Query query = buildQueryFromDto(params);
+
         return mongoTemplate.find(query, Job.class);
     }
 
-    private Criteria createCriteriaParser(String fieldName, String value)
+    private Query buildQueryFromDto(ApplicationSearchDto searchDto)
     {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        try {
-            // Parse input string into LocalDate using defined format
-            LocalDate date = LocalDate.parse(value, formatter);
-            return Criteria.where("appliedDate").is(date);
-        } catch (DateTimeParseException ignored)
-        {}
+        Query query = new Query();
 
-        try {
-            if (value.equals("true") || value.equals("false"))
-            {
-                return Criteria.where(fieldName).is(Boolean.parseBoolean(value));
-            }
-        } catch (Exception ignored)
-        {}
+        if (searchDto.getTitle() != null)
+        {
+            query.addCriteria(Criteria.where("title").regex(searchDto.getTitle(), "i"));
+        }
+        if (searchDto.getCompany() != null)
+        {
+            query.addCriteria(Criteria.where("company").regex(searchDto.getCompany(), "i"));
+        }
 
-        try {
-            if (fieldName.equals("startingPay"))
-            {
-                return Criteria.where("pay").gte(Float.parseFloat(value));
-            }
-            if (fieldName.equals("endingPay"))
-            {
-                return Criteria.where("pay").lte(Float.parseFloat(value));
-            }
-        } catch (Exception ignored)
-        {}
+        if (searchDto.getStartingPay() != null && searchDto.getEndingPay() != null)
+        {
+            query.addCriteria(Criteria.where("pay").in(searchDto.getStartingPay(), searchDto.getEndingPay()));
+        }
 
-        return Criteria.where(fieldName).is(value);
+        else if (searchDto.getStartingPay() != null)
+        {
+            query.addCriteria(Criteria.where("pay").gte(searchDto.getStartingPay()));
+        }
+
+        else if (searchDto.getEndingPay() != null)
+        {
+            query.addCriteria(Criteria.where("pay").lte(searchDto.getEndingPay()));
+        }
+
+        if (searchDto.getRemote() != null)
+        {
+            query.addCriteria(Criteria.where("remote").is(searchDto.getRemote()));
+        }
+
+        if (searchDto.getStartDate() != null && searchDto.getEndDate() != null)
+        {
+            query.addCriteria(Criteria.where("applicationDate").gte(searchDto.getStartDate()).lte(searchDto.getEndDate()));
+        }
+
+        else if (searchDto.getStartDate() != null)
+        {
+            query.addCriteria(Criteria.where("applicationDate").gte(searchDto.getStartDate()));
+        }
+
+        else if (searchDto.getEndDate() != null)
+        {
+            query.addCriteria(Criteria.where("applicationDate").lte(searchDto.getEndDate()));
+        }
+
+        if (searchDto.getApplicationStatus() != null)
+        {
+            query.addCriteria(Criteria.where("applicationStatus").is(searchDto.getApplicationStatus()));
+        }
+        if (searchDto.getJobBoard() != null)
+        {
+            query.addCriteria(Criteria.where("jobBoard").is(searchDto.getJobBoard()));
+        }
+
+        return query;
     }
 }
