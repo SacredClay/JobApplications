@@ -10,7 +10,7 @@ Goals/Bonus:
 - Being able to take a web link and convert it into a job application
 - ~~Make it so the save method automatically updates the modified date instead of manually doing it for every update.~~ Done!
 - Automatically change application status to ghosted after no response from application date
-- Make the params enums?
+- ~~Make the params enums?~~ Not needed, we can just use a Dto with @ModelAttribute
 - If there is already a job application to a company applied in the past, return it as a message when creating a new job application.
 - Allow a webaddress to be blank if it's a job posting site like LinkedIn/Monster.
 - Allow Pay to be hourly and automatically converted to salary. Ie: entering in 15 for 15/hr or 60k for 60,000.
