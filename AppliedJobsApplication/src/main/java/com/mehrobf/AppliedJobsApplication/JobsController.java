@@ -74,7 +74,7 @@ public class JobsController
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<Job>> searchJobApplications(@RequestParam(required = false) Map<String,String> params)
+    public ResponseEntity<List<Job>> searchJobApplications(@ModelAttribute ApplicationSearchDto params)
     {
         List<Job> foundJobs = jobsService.searchJobApplications(params);
 
